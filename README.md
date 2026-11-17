@@ -7,6 +7,12 @@ preset capture, verified spectrum application and an approved illumination test.
 Record observations in the [lab results sheet](results/2026-11-17.md).
 The lab workflow uses Python 3.11 and the pinned requirements files.
 
+Hardware progress on November 17: the real Pico reported 32 channels. Starting
+state capture, channel-limit reads and an off-state replay of all-zero PWM
+values passed. One verified apply took 0.579 seconds. Named preset agreement,
+nonzero transitions and illumination remain pending. A Windows per-socket
+Ethernet override was needed because default routing selected Tailscale.
+
 A Python wrapper around G2V's official `g2vpico` library (v1.0.9) that:
 
 - keeps a **library of spectra**: a folder with one JSON file per spectrum
@@ -14,8 +20,10 @@ A Python wrapper around G2V's official `g2vpico` library (v1.0.9) that:
 - turns the light **on/off** and sets the **global intensity**
 - **captures** whatever is on the Pico into a new spectrum file (used to export the ~20 web-UI presets)
 
-Status: v0.1, **not yet tested on the real Pico**. 63 unit tests pass, and it was checked
-end to end with G2V's library against a simulated Pico. See "To verify on hardware" below.
+Status: v0.1, **initial real-Pico checks passed with an all-zero spectrum**.
+63 unit tests pass. The original implementation also reports a simulated Pico
+integration check. See the dated hardware results for the checks actually
+performed on the device and the remaining work.
 
 ## Files
 
@@ -152,16 +160,16 @@ reject filename collisions with a different spectrum.
 
 ## To verify on hardware
 
-- [ ] `python -m pico_lab status` connects and prints sensible values.
+- [x] API status connects through the wired socket override and reports 32 channels.
 - [ ] Channel values written while the light is off are kept and used by `on()`. G2V's
       docs say `turn_on` uses the stored spectrum.
 - [ ] Choosing a preset in the web page changes the values the API reads back, so
       `capture` actually sees the preset. If not, use Eric's other route: open the
       Pico code and save the spectra dict.
-- [ ] Per-channel limits (`get_channel_limit`) are below 4096 on our unit, and the
-      presets stay within them.
+- [x] Per-channel limits (`get_channel_limit`) were read for all 32 channels, ranging
+      from 1190 to 3300 PWM. Named presets still need checks against these limits.
 - [ ] Timing: applying 32 channels plus verifying is about 70 small requests. Check
-      this is fast enough.
+      this is fast enough. One verified all-zero replay took 0.579 seconds.
 
 ## Tests
 

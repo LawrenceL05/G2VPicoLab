@@ -6,7 +6,9 @@ Goal: verify the wrapper on the real G2V Pico, capture a web preset, apply its
 PWM values with illumination off, and test controlled on/off operation.
 
 Current evidence: 63 automated tests passed locally with a simulated device.
-Physical-device tests remain pending. Record the actual session in
+On November 17, read-only hardware access, capture, limit queries and a verified
+all-zero off-state replay passed. Nonzero loading and illumination remain pending.
+Read the actual session record in
 [the results sheet](results/2026-11-17.md).
 
 ## 1. Prepare the computer before lab
@@ -74,6 +76,55 @@ Test-NetConnection -ComputerName $picoConfig.ip_address -Port 50000
 Expected result: TcpTestSucceeded is True. A reachable web page alone does not
 confirm the API port. If this fails, check cable, adapter/subnet, control
 software and API enablement before issuing wrapper commands.
+
+### Observed Windows routing issue
+
+On November 17, Ethernet reported Up at 1 Gbps but Windows selected Tailscale
+for the Pico IP range. The ordinary TCP check timed out. Inspect the selected
+route before concluding the Pico is unavailable:
+
+```powershell
+Get-NetAdapter -Name Ethernet
+Get-NetIPAddress -InterfaceAlias Ethernet -AddressFamily IPv4
+Find-NetRoute -RemoteIPAddress $picoConfig.ip_address
+```
+
+The successful session used a per-process socket override to select the wired
+interface. That override does not persist for later CLI commands. The following
+reproduces a read-only status check on Windows without changing system routes.
+Confirm the displayed adapter address and interface index first. Replace the two
+example values if they differ on the lab computer.
+
+```powershell
+@'
+import runpy
+import socket
+import struct
+import sys
+
+wired_address = "169.254.59.52"  # Observed laptop Ethernet address on November 17.
+wired_index = 15                # Observed Ethernet interface index.
+original_socket = socket.socket
+
+def wired_socket(*args, **kwargs):
+    connection = original_socket(*args, **kwargs)
+    if connection.family == socket.AF_INET and connection.type == socket.SOCK_STREAM:
+        connection.setsockopt(socket.IPPROTO_IP, 31, struct.pack("!I", wired_index))
+        connection.bind((wired_address, 0))
+    return connection
+
+socket.socket = wired_socket
+sys.argv = ["pico_lab", "status"]
+runpy.run_module("pico_lab", run_name="__main__")
+'@ | .\.venv\Scripts\python.exe -
+```
+
+The hardware session used the existing workspace .venv-g2vpico interpreter.
+The commands in this guide use the project .venv created in Step 1. Both need
+the pinned vendor package. For later hardware steps, establish a verified wired
+route or use the same per-process binding in each command. The stock wrapper
+currently has no interface-selection flag. Record any routing adjustment before
+continuing with preset tests.
 
 Optionally record the terminal session locally:
 
