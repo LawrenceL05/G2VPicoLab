@@ -1,0 +1,2 @@
+# Vendor source matches MainClass.py in the locally tested g2vpico 1.0.9 install.
+g2vpico @ https://github.com/g2v-optics/G2VPico/archive/c8800d28867f4e04d89a0b2d58195b7965f7f874.zip

@@ -1,0 +1,6 @@
+{
+  "ip_address": "PICO_IP_ADDRESS",
+  "pico_id": "0000000000000000",
+  "spectra_dir": "spectra",
+  "timeout_s": 20
+}
