@@ -120,7 +120,7 @@ def main(argv=None) -> int:
                 print(f"Saved {spec.path}")
             elif args.cmd == "capture-presets":
                 capture_presets(pico)
-    except (SpectrumError, FileExistsError, ValueError, RuntimeError) as exc:
+    except (SpectrumError, OSError, ValueError, RuntimeError) as exc:
         print(f"Error: {exc}", file=sys.stderr)
         return 1
     return 0
