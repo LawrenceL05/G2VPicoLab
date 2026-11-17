@@ -3,7 +3,7 @@ import json
 
 import pytest
 
-from pico_lab import FakePico, PicoController, Spectrum, SpectrumError, SpectrumLibrary
+from pico_lab import SimulatedPico, PicoController, Spectrum, SpectrumError, SpectrumLibrary
 from pico_lab.__main__ import main
 from pico_lab import spectrum as spectrum_module
 
@@ -11,7 +11,7 @@ from pico_lab import spectrum as spectrum_module
 @pytest.fixture
 def pico(tmp_path):
     return PicoController("unused", "0" * 16, spectra_dir=tmp_path,
-                          device=FakePico(channel_count=2))
+                          device=SimulatedPico(channel_count=2))
 
 
 @pytest.mark.parametrize("result", [False, None])

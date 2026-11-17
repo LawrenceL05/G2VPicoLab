@@ -7,7 +7,7 @@ PWM values with illumination off, and test controlled on/off operation.
 
 Current evidence: 63 automated tests passed locally with a simulated device.
 On November 17, read-only hardware access, capture, limit queries and a verified
-all-zero off-state replay passed. Nonzero loading and illumination remain pending.
+all-zero off-state replay passed. The wrapper also replayed a nonzero preset and verified the Pico's on/off status.
 Read the actual session record in
 [the results sheet](results/2026-11-17.md).
 

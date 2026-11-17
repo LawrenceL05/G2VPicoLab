@@ -6,10 +6,10 @@ Add --dry-run to try it without the Pico.
 import sys
 import time
 
-from pico_lab import FakePico, PicoController
+from pico_lab import SimulatedPico, PicoController
 
 DRY_RUN = "--dry-run" in sys.argv
-overrides = {"device": FakePico()} if DRY_RUN else {}
+overrides = {"device": SimulatedPico()} if DRY_RUN else {}
 
 with PicoController.from_config("config.json", **overrides) as pico:
     print(pico, pico.status())

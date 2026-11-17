@@ -19,7 +19,7 @@ import sys
 from pathlib import Path
 
 from .controller import PicoController
-from .fake import FakePico
+from .simulator import SimulatedPico
 from .spectrum import SpectrumError
 
 
@@ -29,7 +29,7 @@ def build_parser():
     p.add_argument("--ip", help="override ip_address from config")
     p.add_argument("--id", help="override pico_id from config")
     p.add_argument("--spectra-dir", help="override spectra_dir from config")
-    p.add_argument("--dry-run", action="store_true", help="use a fake Pico, no hardware")
+    p.add_argument("--dry-run", action="store_true", help="use the in-memory Pico simulator")
     sub = p.add_subparsers(dest="cmd", required=True)
 
     sub.add_parser("status")
@@ -50,7 +50,7 @@ def build_parser():
 def connect(args) -> PicoController:
     overrides = {"ip_address": args.ip, "pico_id": args.id, "spectra_dir": args.spectra_dir}
     if args.dry_run:
-        overrides["device"] = FakePico()
+        overrides["device"] = SimulatedPico()
     cfg = Path(args.config)
     if cfg.exists():
         return PicoController.from_config(cfg, **overrides)

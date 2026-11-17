@@ -1,15 +1,15 @@
-"""Run with:  python -m pytest tests   (no hardware needed - uses FakePico)"""
+"""Run with:  python -m pytest tests   (no hardware needed - uses SimulatedPico)"""
 import json
 
 import pytest
 
-from pico_lab import FakePico, PicoController, Spectrum, SpectrumError, SpectrumLibrary
+from pico_lab import SimulatedPico, PicoController, Spectrum, SpectrumError, SpectrumLibrary
 from pico_lab.__main__ import main
 
 
 def make(tmp_path, **kw):
     return PicoController("0.0.0.0", "0000000000000000", spectra_dir=tmp_path,
-                          device=FakePico(**kw))
+                          device=SimulatedPico(**kw))
 
 
 def spec(name="Test", **channels):

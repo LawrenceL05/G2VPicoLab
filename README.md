@@ -7,11 +7,9 @@ preset capture, verified spectrum application and an approved illumination test.
 Record observations in the [lab results sheet](results/2026-11-17.md).
 The lab workflow uses Python 3.11 and the pinned requirements files.
 
-Hardware progress on November 17: the real Pico reported 32 channels. Starting
-state capture, channel-limit reads and an off-state replay of all-zero PWM
-values passed. One verified apply took 0.579 seconds. Named preset agreement,
-nonzero transitions and illumination remain pending. A Windows per-socket
-Ethernet override was needed because default routing selected Tailscale.
+On November 17, the wrapper captured and replayed the real Pico's
+`am1.5g.0.1suns` preset. All 32 channel values matched. The Pico confirmed
+illumination on and then off in the 10-second test. Irradiance remains unmeasured.
 
 A Python wrapper around G2V's official `g2vpico` library (v1.0.9) that:
 
@@ -20,11 +18,6 @@ A Python wrapper around G2V's official `g2vpico` library (v1.0.9) that:
 - turns the light **on/off** and sets the **global intensity**
 - **captures** whatever is on the Pico into a new spectrum file (used to export the ~20 web-UI presets)
 
-Status: v0.1, **initial real-Pico checks passed with an all-zero spectrum**.
-63 unit tests pass. The original implementation also reports a simulated Pico
-integration check. See the dated hardware results for the checks actually
-performed on the device and the remaining work.
-
 ## Files
 
 ```
@@ -32,7 +25,7 @@ G2VPicoLab/
 ├── pico_lab/
 │   ├── controller.py    PicoController: the main class
 │   ├── spectrum.py      Spectrum + SpectrumLibrary (JSON files)
-│   ├── fake.py          FakePico: stand-in for testing without hardware
+│   ├── simulator.py     SimulatedPico for offline tests and --dry-run
 │   └── __main__.py      command line: python -m pico_lab ...
 ├── spectra/             spectrum JSON files go here
 ├── tests/               python -m pytest tests
@@ -94,7 +87,7 @@ python -m pico_lab apply AM1.5G --on --intensity 80
 python -m pico_lab off
 python -m pico_lab capture "My spectrum" --description "..."
 python -m pico_lab capture-presets
-python -m pico_lab --dry-run apply AM1.5G       # fake Pico, no hardware
+python -m pico_lab --dry-run apply AM1.5G       # use the in-memory simulator
 ```
 
 ## Exporting the web-UI presets (building the library)
@@ -177,4 +170,4 @@ reject filename collisions with a different spectrum.
 python -m pytest tests
 ```
 
-These use `FakePico`, so they run on any computer without the Pico.
+These use `SimulatedPico`, so they run on any computer without the Pico.
