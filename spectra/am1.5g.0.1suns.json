@@ -264,7 +264,8 @@
     }
   ],
   "source": "Pico web preset am1.5g.0.1suns",
+  "pico_id": "",
   "channel_count": 32,
-  "created": "2026-11-17T11:55:53-08:00",
+  "created": "2026-11-18T12:45:59-08:00",
   "notes": ""
 }
