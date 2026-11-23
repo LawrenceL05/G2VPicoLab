@@ -1,0 +1,1 @@
+session_id,timestamp_iso,sample_id,distance_mm,x_mm,y_mm,exposure_id,phase,reading_index,current,current_unit,temperature_c,spectrum_name,global_intensity_percent,meter_mode,meter_range,settle_s,read_window_s,status,notes

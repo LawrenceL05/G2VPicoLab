@@ -1,5 +1,13 @@
 # pico_lab: G2V Pico spectrum wrapper
 
+## Next lab task
+
+Use the [one-sun distance workflow](WORKING_DISTANCE_WORKFLOW.md) to find the
+sample plane where the reference sample matches its calibrated one-sun current.
+The procedure uses the existing controller, manual multimeter readings, a coarse
+and fine distance sweep, and repeat measurements. Record the raw measurements
+with the [CSV template](results/working-distance-template.csv).
+
 ## Lab session on November 17, 2026
 
 Use the [hardware workflow](LAB_WORKFLOW.md) for setup, connection checks,
